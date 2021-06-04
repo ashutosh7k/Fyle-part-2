@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fyle 1</title>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+        integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+        integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+
+
+    <style>
+        .forms {
+            display: flex;
+            width: 100%;
+            justify-content: space-between;
+        }
+
+        .forms form {
+            flex: .3;
+
+        }
+
+        #table-data {
+            margin-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 class='container'>Bank Branches</h1>
+    <div class='container' style="margin-top: 50px;">
+        <div class="jumbotron">
+            <div class='forms'>
+                <form id="city-form">
+                    <label for="city">Select City</label>
+                    <select name="city" id="city" class='form-group form-control'>
+                        <option value="Bangalore">Bangalore</option>
+                        <option value="Pune">Pune</option>
+                        <option value="Delhi">Delhi</option>
+                        <option value="Kolkata">Kolkata</option>
+                        <option value="Mumbai">Mumbai</option>
+                    </select>
+                    <input type='submit' class='btn btn-primary form-group form-control' />
+                </form>
+                <form style='margin-top: 25px;' id='search-form'>
+                    <input id='query' class='form-group form-control' placeholder='Search' type='text' />
+                    <input class='form-group form-control btn btn-primary' type='submit' />
+                </form>
+
+            </div>
+            <div>
+                <table id="table-data" class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Bank ID</th>
+                            <th scope="col">BRANCH</th>
+                            <th scope="col">IFSC</th>
+                            <th scope="col">ADDRESS</th>
+                            <th scope="col">CITY</th>
+                            <th scope="col">DISTRICT</th>
+                            <th scope="col">STATE</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        $("#city-form").on('submit', (e) => {
+            e.preventDefault();
+            var city = $("#city").val()
+            $.ajax({
+                url: `/api/branches?q=` + city + `&limit=4&offset=0`,
+                type: "get",
+                success: function (response) {
+                    console.log(response);
+                    $("#table-data tbody").empty()
+                    for (i in response.branches) {
+                        $("#table-data tbody").append(
+                            `
+                            <tr>
+                                <th scope='row'>`+ (parseInt(i) + 1).toString() + `</th>
+                                <td>` + response.branches[i].bank_id + `</td>
+                                <td>` + response.branches[i].branch + `</td>
+                                <td>` + response.branches[i].ifsc + `</td>
+                                <td>` + response.branches[i].address + `</td>
+                                <td>` + response.branches[i].city + `</td>
+                                <td>` + response.branches[i].district + `</td>
+                                <td>` + response.branches[i].state + `</td>    
+                            </tr>
+                            `
+                        )
+                    }
+                }
+            })
+        })
+
+        $("#search-form").on('submit', (e) => {
+            e.preventDefault();
+            var city = $("#query").val()
+            $.ajax({
+                url: `/api/branches/autocomplete?q=` + city + `&limit=4&offset=0`,
+                type: "get",
+                success: function (response) {
+                    console.log(response);
+                    $("#table-data tbody").empty()
+
+                    for (i in response.branches) {
+                        $("#table-data tbody").append(
+                            `
+                            <tr>
+                                <th scope='row'>`+ (parseInt(i) + 1).toString() + `</th>
+                                <td>` + response.branches[i].bank_id + `</td>
+                                <td>` + response.branches[i].branch + `</td>
+                                <td>` + response.branches[i].ifsc + `</td>
+                                <td>` + response.branches[i].address + `</td>
+                                <td>` + response.branches[i].city + `</td>
+                                <td>` + response.branches[i].district + `</td>
+                                <td>` + response.branches[i].state + `</td>    
+                            </tr>
+                            `
+                        )
+                    }
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>
