@@ -7,7 +7,7 @@
 - sql
 # Command to run
 `python manage.py runserver`
-# view deployement [here](https://fyle-part-2.herokuapp.com/)
+# View deployement [here](https://fyle-part-2.herokuapp.com/)
 https://fyle-part-2.herokuapp.com/
 
 
