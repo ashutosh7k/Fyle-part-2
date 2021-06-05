@@ -1,0 +1,1 @@
+web: gunicorn fyleProject.wsgi --log-file -
